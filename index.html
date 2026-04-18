@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cultivos de Colombia · Evaluaciones Agropecuarias</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ══ HEADER ══ -->
+  <header class="site-header">
+    <div class="accent-bar"></div>
+    <div class="header-inner">
+      <div class="header-left">
+        <p class="eyebrow">🌿 API SODA · datos.gov.co · EVA Colombia</p>
+        <h1 class="header-title">Rendimiento<br><em>Agrícola</em><br>de Colombia</h1>
+        <p class="header-sub">Evaluaciones Agropecuarias Municipales · 2006–2018</p>
+      </div>
+      <div class="header-kpis">
+        <div class="kpi">
+          <span class="kpi-num" id="kpiRegistros">—</span>
+          <span class="kpi-label">registros</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-num" id="kpiCultivos">—</span>
+          <span class="kpi-label">cultivos</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-num" id="kpiDeptos">—</span>
+          <span class="kpi-label">departamentos</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-num" id="kpiAnios">—</span>
+          <span class="kpi-label">años</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ CONTROLS ══ -->
+  <div class="controls-bar">
+    <div class="controls-inner">
+
+      <div class="search-wrap">
+        <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input id="searchInput" type="text" placeholder="Buscar cultivo, municipio, departamento…" autocomplete="off"/>
+        <button id="clearBtn" class="clear-btn">✕</button>
+      </div>
+
+      <div class="filter-group">
+        <label for="deptoFilter">Departamento</label>
+        <select id="deptoFilter"><option value="">Todos</option></select>
+      </div>
+
+      <div class="filter-group">
+        <label for="grupoFilter">Grupo</label>
+        <select id="grupoFilter"><option value="">Todos</option></select>
+      </div>
+
+      <div class="filter-group">
+        <label for="cultivoFilter">Cultivo</label>
+        <select id="cultivoFilter"><option value="">Todos</option></select>
+      </div>
+
+      <div class="filter-group">
+        <label for="anioFilter">Año</label>
+        <select id="anioFilter"><option value="">Todos</option></select>
+      </div>
+
+      <div class="filter-group">
+        <label for="cicloFilter">Ciclo</label>
+        <select id="cicloFilter"><option value="">Todos</option></select>
+      </div>
+
+      <div class="filter-group">
+        <label for="sortSelect">Ordenar por</label>
+        <select id="sortSelect">
+          <option value="cultivo">Cultivo A→Z</option>
+          <option value="rendimiento-desc">Mayor rendimiento (t/ha)</option>
+          <option value="rendimiento-asc">Menor rendimiento (t/ha)</option>
+          <option value="produccion-desc">Mayor producción (t)</option>
+          <option value="area-desc">Mayor área sembrada (ha)</option>
+          <option value="anio-desc">Año más reciente</option>
+          <option value="anio-asc">Año más antiguo</option>
+        </select>
+      </div>
+
+    </div>
+    <div class="results-bar">
+      <span id="resultsCount">Cargando…</span>
+      <div class="pager">
+        <button id="prevBtn" class="page-btn" disabled>← Ant</button>
+        <span id="pageInfo">—</span>
+        <button id="nextBtn" class="page-btn" disabled>Sig →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STAT CHIPS ══ -->
+  <section class="stat-chips">
+    <div class="chip green">
+      <span class="chip-label">Producción total (t)</span>
+      <span class="chip-val" id="sProd">—</span>
+    </div>
+    <div class="chip olive">
+      <span class="chip-label">Área sembrada total (ha)</span>
+      <span class="chip-val" id="sArea">—</span>
+    </div>
+    <div class="chip amber">
+      <span class="chip-label">Rendimiento promedio (t/ha)</span>
+      <span class="chip-val" id="sRend">—</span>
+    </div>
+    <div class="chip teal">
+      <span class="chip-label">Cultivo más productivo</span>
+      <span class="chip-val" id="sTopCultivo">—</span>
+    </div>
+    <div class="chip brown">
+      <span class="chip-label">Depto. más productivo</span>
+      <span class="chip-val" id="sTopDepto">—</span>
+    </div>
+  </section>
+
+  <!-- ══ CHARTS ══ -->
+  <section class="charts-grid">
+
+    <div class="chart-card wide">
+      <h3 class="chart-title">Producción por cultivo (t)</h3>
+      <div id="chartCultivos" class="hbar"></div>
+    </div>
+
+    <div class="chart-card">
+      <h3 class="chart-title">Producción por grupo (t)</h3>
+      <div id="chartGrupos" class="hbar"></div>
+    </div>
+
+    <div class="chart-card">
+      <h3 class="chart-title">Top departamentos — producción (t)</h3>
+      <div id="chartDeptos" class="hbar"></div>
+    </div>
+
+    <div class="chart-card wide">
+      <h3 class="chart-title">Evolución de producción total por año (t)</h3>
+      <div id="chartAnios" class="hbar timeline"></div>
+    </div>
+
+    <div class="chart-card">
+      <h3 class="chart-title">Distribución por ciclo de cultivo</h3>
+      <div id="chartCiclo" class="hbar"></div>
+    </div>
+
+    <div class="chart-card">
+      <h3 class="chart-title">Rendimiento promedio por cultivo (t/ha)</h3>
+      <div id="chartRend" class="hbar"></div>
+    </div>
+
+  </section>
+
+  <!-- ══ TABLE ══ -->
+  <section class="table-section">
+    <h2 class="section-title">Registros detallados</h2>
+    <div class="table-wrap">
+      <table id="mainTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Departamento</th>
+            <th>Municipio</th>
+            <th>Grupo</th>
+            <th>Cultivo</th>
+            <th>Nombre científico</th>
+            <th>Año</th>
+            <th>Período</th>
+            <th>Área sembrada (ha)</th>
+            <th>Área cosechada (ha)</th>
+            <th>Producción (t)</th>
+            <th>Rendimiento (t/ha)</th>
+            <th>Estado físico</th>
+            <th>Ciclo</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td colspan="14" class="loading-cell">
+              <div class="loader"></div> Cargando datos…
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="site-footer">
+    <p>Fuente: <strong>datos.gov.co</strong> · Evaluaciones Agropecuarias Municipales (EVA) · Ministerio de Agricultura</p>
+    <p class="footer-note">API SODA · Endpoint: /resource/2pnw-mmge.json · Proyecto académico</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
