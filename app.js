@@ -1,18 +1,13 @@
-/**
- * CULTIVOS DE COLOMBIA — app.js
- * Consulta la API SODA de datos.gov.co y visualiza
- * los datos de Evaluaciones Agropecuarias Municipales (EVA).
- *
- * Endpoint: https://www.datos.gov.co/resource/2pnw-mmge.json
- */
+
 
 // ── CONFIG ──────────────────────────────────────────────────
+const APP_TOKEN = 'zx7odryLe9M4i3jda4o4P5LjL';
 const API_URL   = 'https://www.datos.gov.co/resource/2pnw-mmge.json';
 const PAGE_SIZE = 50;
 
 // ── ESTADO ──────────────────────────────────────────────────
-let allData    = [];   // Dataset completo desde la API
-let filtered   = [];   // Subset tras filtros
+let allData    = [];   
+let filtered   = [];  
 let currentPage = 1;
 
 // ── DOM ──────────────────────────────────────────────────────
@@ -40,7 +35,6 @@ const PALETTE = [
 // ── FETCH ────────────────────────────────────────────────────
 async function fetchData() {
   try {
-    // Cargamos hasta 1000 registros (límite SODA por defecto es 1000)
     const params = new URLSearchParams({
       '$limit': 1000,
       '$order': 'a_o DESC'
