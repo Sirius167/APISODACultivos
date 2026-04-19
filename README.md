@@ -101,6 +101,9 @@ Funciona en computadores, tablets y celulares
 
 Las gráficas y tabla se adaptan al tamaño de pantalla
 
+<img width="1861" height="934" alt="image" src="https://github.com/user-attachments/assets/c6685f33-3fcb-4df6-8909-b6c6899adb0d" />
+
+
 
 
 Hecho por Felipe Jaramillo y Ricardo Lora
