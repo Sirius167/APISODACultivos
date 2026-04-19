@@ -4,7 +4,7 @@ const API_URL = 'https://www.datos.gov.co/resource/2pnw-mmge.json';
 const PAGE_SIZE = 50;
 
 
-const APP_TOKEN = '';
+const APP_TOKEN = 'zx7odryLe9M4i3jda4o4P5LjL';
 
 // ── ESTADO ──────────────────────────────────────────────────
 let allData = [];
